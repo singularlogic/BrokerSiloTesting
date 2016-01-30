@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>
+Broker@Cloud VTTS 1.0
+</title>
+</head>
+<body>
+
+<p>This package contains skeleton JAX-WS Java clients for testing with
+generated JUnit test drivers that test JAX-WS Java clients for SOAP services.
+It is part of the <strong>Broker@Cloud Verification and Testing Tool Suite,
+v1.0</strong>, &copy; Anthony J H Simons and Raluca Lefticaru, 2015. 
+Main web site:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/</a>.
+</p>
+
+<h3>
+Sub-package uk.ac.sheffield.vtts.client.ws
+</h3>
+<p>This package is a repository where you may place service clients 
+that are JAX-WS Java clients for a SOAP and WSDL service.  Target 
+JAX-WS-testers onto clients in this package.  We have only sketched the 
+outlines of the two kinds of client object (a resource class; and an 
+interface) with which generated test-drivers expect to interact;
+since you will need to create the web clients yourself, using the tools
+offered by the JAX-WS development framework.
+</p>
+<p>
+In general, you will use the JAX-WS development framework to build your
+JAX-WS web service.  The service implementation may have been created
+ bottom-up starting with the annotated Java service, from which the WSDL was
+ generated (using JAX-WS <em>wsgen</em>); or top-down starting with the WSDL 
+ and generating the service resource classes (using JAX-WS <em>wsimport</em>).
+ We then assume that a Java client is created from the WSDL (using JAX-WS
+ <em>wsdl2java</em>).  This creates two entities, a client implementation and
+ a service interface, against which all service calls are made.  The names of
+ the interface methods must match the names used in the original service
+ specification.  
+</p>
+<p>Apart from the service clients, further kinds of domain object (such as 
+the class <code>DVD</code> used in the <code>ShoppingCart</code> example) are
+provided here, so that they are available to the generated test-drivers along
+with the tested service client.
+</p>
+
+</body>

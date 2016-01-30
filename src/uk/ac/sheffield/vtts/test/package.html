@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>
+Broker@Cloud VTTS 1.0
+</title>
+</head>
+<body>
+
+<p>This package is a repository under which the test grounding tools will 
+place generated JUnit test-driver classes.  It has three sub-packages for
+POJO, SOAP or REST test-drivers.
+It is part of the <strong>Broker@Cloud Verification and Testing
+Tool Suite, v1.0</strong>, &copy; Anthony J H Simons and Raluca Lefticaru, 
+2015. Main web site:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/</a>.
+</p>
+
+<h3>
+Package uk.ac.sheffield.vtts.test
+</h3>
+<p>This package, or its sub-packages, may be used to contain generated JUnit
+test driver classes that were created by the Broker@Cloud test grounding 
+tool.  Since the usual JUnit convention is to append "Test" onto the name of
+the service-under-test, and since this would overwrite one test driver with 
+another for the same service, we also provide sub-packages to store the test
+drivers for targeting different types of service client (Java; JAX-WS; 
+JAX-RS).  If you don't specify any particular target packages for your
+generated JUnit test driver classes, the command-line tools will use this 
+package structure to store them.
+</p>
+
+<h3>
+Sub-package uk.ac.sheffield.vtts.test.pojo
+</h3>
+<p>This sub-package may be used to contain generated JUnit test drivers that
+test service clients that are "Plain Old Java Objects" (POJOs).  If there
+is nothing here, why not create a Java client test driver of your own?
+</p>
+
+<h3>
+Sub-package uk.ac.sheffield.vtts.test.ws
+</h3>
+<p>This sub-package may be used to contain generated JUnit test drivers that
+test service clients that are JAX-WS SOAP web services.  If there is nothing
+here, why not create a JAX-WS client test driver of your own?
+</p>
+
+<h3>
+Sub-package uk.ac.sheffield.vtts.test.rs
+</h3>
+<p>This sub-package may be used to contain generated JUnit test drivers that
+test service clients that are JAX-RS REST web services.  If there is nothing
+here, why not create a JAX-RS client test driver of your own?
+</p>
+
+</body>

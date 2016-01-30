@@ -1,0 +1,56 @@
+<html>
+<head>
+<title>
+Broker@Cloud VTTS 1.0
+</title>
+</head>
+<body>
+
+<p>This package is a repository under which designers should place Java 
+service clients, to be tested using generated test-drivers.  There are two
+sub-packages for POJO clients and for JAX-WS SOAP clients; and a third
+sub-package that may be used to store any supplementary Java components 
+for JAX-RS REST services (for which there is no Java client).
+It is part of the <strong>Broker@Cloud Verification and Testing Tool Suite,
+v1.0</strong>, &copy; Anthony J H Simons and Raluca Lefticaru, 2015. 
+Main web site:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/</a>.
+</p>
+
+<h3>
+Package uk.ac.sheffield.vtts.client
+</h3>
+<p>This package contains skeleton service clients for testing with (some
+of) the grounded test suites.  As supplied, these service clients are 
+deliberately incomplete, to encourage you to modify them in response to
+detected test failures.  Two kinds of Java service client, for Java POJOs
+and JAX-WS SOAP services, may be found in sub-packages; but there is no 
+special Java client for the JAX-RS REST service, since REST calls are made
+directly via HTTP on a standard Apache server.
+</p>
+
+<h3>
+Sub-package uk.ac.sheffield.vtts.client.pojo
+</h3>
+<p>This sub-package contains skeleton service clients that are "Plain 
+Old Java Objects" (POJOs).  Target POJO-testers onto clients in this
+package.
+</p>
+
+<h3>
+Sub-package uk.ac.sheffield.vtts.client.ws
+</h3>
+<p>This sub-package contains skeleton service clients that are JAX-WS
+clients for a SOAP service.  Target JAX-WS-testers onto clients in 
+this package.
+</p>
+
+<h3>
+Sub-package uk.ac.sheffield.vtts.client.rs
+</h3>
+<p>This sub-package only contains any service components or other 
+witness-types that you may need for your JAX-RS REST web services.
+</p>
+
+</body>

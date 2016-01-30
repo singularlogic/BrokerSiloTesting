@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>
+Broker@Cloud VTTS 1.0
+</title>
+</head>
+<body>
+
+<p>This package contains service components and witness-types for testing 
+with generated JUnit test drivers that test JAX-RS REST services.
+It is part of the <strong>Broker@Cloud Verification and Testing Tool Suite,
+v1.0</strong>, &copy; Anthony J H Simons and Raluca Lefticaru, 2015. 
+Main web site:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/</a>.
+</p>
+
+<h3>
+Sub-package uk.ac.sheffield.vtts.client.rs
+</h3>
+<p>This package is a repository where you may place any components needed by
+your JAX-RS web service implementations.  Unlike the other service client
+examples, there is no Java service client for REST services, since calls are
+made directly against the REST API of those services.  However, we provide
+this folder as a repository where you may place further types used by your
+JAX-RS service implementations.
+</p>
+<p>
+In general, you will use the JAX-RS development framework to build your
+JAX-RS web service.  We assume that you will have used the Apache Jersey 
+reference implementation for your REST service, and that you will have used 
+Google's Gson to parse JSON responses.  When you generate JUnit test-drivers
+for a JAX-RS REST web service, these will have dependencies on certain
+Jersey and Gson files.  You will need to configure your build path to
+include these dependencies from the library accompanying this source
+code bundle (or by installing them from primary sources yourself).
+</p>
+<p>Apart from any service components, further kinds of domain object (such as 
+the class <code>DVD</code> used in the <code>ShoppingCart</code> example) are
+provided here, so that they are available to the generated test-drivers.
+</p>
+
+</body>

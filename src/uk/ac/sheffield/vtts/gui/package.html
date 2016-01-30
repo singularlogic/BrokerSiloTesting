@@ -1,0 +1,150 @@
+<html>
+<head>
+<title>
+Broker@Cloud VTTS 1.0
+</title>
+</head>
+<body>
+
+<p>This package contains a simple Java Swing graphical user interface that
+allows you to run the Broker@Cloud Verification and Testing Tool Suite as a
+stand-alone Java application. 
+It is part of the <strong>Broker@Cloud Verification and Testing Tool Suite, 
+v1.0</strong>, &copy; Anthony J H Simons and Raluca Lefticaru, 2015. 
+Main web site:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/</a>.
+</p>
+
+<h3>
+Package uk.ac.sheffield.vtts.gui
+</h3>
+<p>This package contains a simple Java Swing graphical user interface that
+allows you to run the Broker@Cloud Verification and Testing Tool Suite as a
+stand-alone Java application.  This application allows you to: 
+</p>
+<ul>
+<li>
+validate an XML service specification, to check whether the state
+transition diagram is sensible and appropriate;
+</li>
+<li>
+verify an XML service specification, to check whether the operation
+specifications are consistent and complete;
+</li>
+<li>
+generate a technology-neutral XML test suite from an XML service specification, 
+to cover all the states and transitions of the specification;
+</li>
+<li>
+translate a technology-neutral XML test suite into one of three different JUnit
+formats, expected by platform-specific Java service clients.
+</li>
+</ul>
+
+<h3>Dependencies</h3>
+<p>These tools depend directly on two libraries; but any test code you
+later generate will depend on different libraries, depending on the kind
+of technology you use for your cloud software services.  For convenience,
+we have bundled the essential library files to accompany this distribution:
+</p>
+<ul>
+<li><code>jast-1.1.jar</code> - XML marshalling and unmarshalling software</li>
+<li><code>jsyntaxpane-1.0.0.jar</code> - XML and Java syntax pretty-printer</li>
+</ul>
+<p>
+All tools use the <em>Java Abstract Syntax Trees</em> (JAST)
+package for marshalling and unmarshalling, &copy; Anthony J H 
+Simons, University of Sheffield, available from:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/jast/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/jast/</a>.
+If working with JDK, you should install JAST 1.1 (or any later
+version) in the same place that you unpack this software.  If
+working in an IDE (such as Eclipse, NetBeans, etc.) you should
+configure your build path to include <code>jast-1.1.jar</code>.
+</p>
+<p>The GUI front-end also uses the <em>JSyntaxPane</em> package for
+pretty-printing XML and Java syntax, &copy; Ayman Al-Sairafi,
+ACI Worldwide, Bahrain (hosted at Google Code), and extended by
+Hanns Holger Rutz, SCISS, Germany (hosted at GitHub).
+If working with JDK, you should install JSyntaxPane 1.0.0 (or any 
+later version) in the same place that you unpack this software.  
+If working in an IDE (such as Eclipse, NetBeans, etc.) you should
+configure your build path to include <code>jsyntaxpane-1.0.0.jar</code>.
+</p>
+
+<p>
+While these are the only dependencies required by the verification and testing
+tool suite, you will generate Java code designed for JUnit 4.  We recommend
+that you install the JUnit 4 library available with your Java IDE.  If you
+generate code just for testing "plain old Java objects" (POJOs), then this
+is all you will need to execute the generated tests.  If you generate code 
+for JAX-WS SOAP web services, then this will depend on whatever Java service 
+client classes that you generate from the service's WSDL, using the JAX-WS 
+tools.  If you generate code for JAX-RS REST web services, then this code 
+will depend on the Apache Jersey 1.19 reference implementation of a REST
+web-server, and also use Google Gson 2.3.1 to unmarshal JSON data.  All
+these packages are widely available at no cost.
+</p>
+
+<h3>Usage</h3>
+<p>
+A service specification is developed in stages.  First the designer should
+validate the specification, to be sure that they have chosen the intended
+states and transitions for the service,  Later, they should verify that the
+logical conditions specified for each operation are consistent and complete.
+When the specification is known to be correct, and has passed the validation 
+and verification stages, the designer may generate high-level abstract tests
+from the specification, in a technology-neutral format, ensuring that all
+the states and transitions of the specification are covered.  Finally, the
+designer may generate concrete JUnit test-driver code from the high-level
+specification, in one of several formats that assume testing either a SOAP
+or REST web-service, or even a plain old Java object.
+</p>
+<p>
+A service specification is developed in the XML service specification language
+developed for Broker@Cloud, for which the XML schema (XSD) can be found here:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/ServiceSchema.xsd">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/ServiceSchema.xsd</a>.
+The website above also contains examples of specifications conforming to this
+schema, as illustrations.  The four tools are intended to help the designer
+develop a relevant and correct specification, and should be applied in the
+given order:  validation, verification, test generation, test grounding.  Each
+subsequent tool assumes that the specification has been passed by the previous
+tools.  If not, then arbitrary results may ensue.
+</p>
+<p>
+To launch the stand-alone Java Swing application, either double-click on the
+icon for the tool on your desktop; or load the class <code>BrokerAtCloudVTTS</code>
+in your Eclipse IDE and select <em>Run</em> from the Eclipse main menu.  Each
+of the functionalities is supplied under a different tabbed pane.
+</p>
+
+<ul>
+<li><strong>Validation</strong>: validates a specification looking
+for missing transitions in the state machine.  Checks all handled 
+and ignored events, so that the designer may be confident of handling
+the desired events in each state.
+</li>
+
+<li><strong>Verification</strong>: verifies a specification for
+logical consistency and completeness.  Checks that all the guarded
+paths through each operation are mutually exclusive and exhaustive, 
+such that there is no blocking or nondeterminism.
+</li>
+
+<li><strong>Test Generation</strong>: generates a high-level test suite 
+from a specification.  Simulates the whole specification model
+(machine and protocol), generating test sequences up to a given maximum
+length, and optionally compressing the results.
+</li>
+
+<li><strong>Test Grounding</strong>: generates a concrete JUnit test driver,
+based on the assumption that the service-under-test is either:  a plain old
+Java object; a JAX-WS SOAP web service; or a JAX-RS REST web service.  These
+are examples on which to base your own grounding.
+</li>
+
+</ul>
+
+</body>

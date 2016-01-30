@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestSuite id="0" name="VatClearance" testDepth="1" grounding="Java" metaCheck="true">
+  <Notice id="1" text="Generated test suite for service: VatClearance">
+    <Analysis id="2" text="Exploring all paths up to length: 1"/>
+    <Analysis id="3" text="Number of theoretical sequences: 46"/>
+    <Analysis id="4" text="Number of infeasible sequences: 14"/>
+    <Analysis id="5" text="Number of redundant sequences: 0"/>
+    <Analysis id="6" text="Number of executable sequences: 32"/>
+    <Warning id="7" text="These Transitions were never fired:">
+      <Transition id="8" name="addInvoice/error" source="VatDeclaration" target="VatDeclaration"/>
+      <Transition id="9" name="removeInvoice/ok" source="VatDeclaration" target="VatDeclaration"/>
+      <Transition id="10" name="payAmount/credit" source="Clearance" target="Final"/>
+    </Warning>
+    <Warning id="11" text="Specification is not fully covered by the test suite">
+      <Analysis id="12" text="Suggest increasing the path length"/>
+    </Warning>
+  </Notice>
+  <TestSequence id="13" state="Initial" path="0" test="1">
+    <TestStep id="14" name="create/ok" state="Initial" verify="true">
+      <Operation id="15" name="create"/>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="16" state="Initial" path="1" test="2">
+    <TestStep id="17" name="create/ok" state="Initial">
+      <Operation id="18" name="create"/>
+    </TestStep>
+    <TestStep id="19" name="enterVatDeclaration/ok" state="VatDeclaration" verify="true">
+      <Operation id="20" name="enterVatDeclaration">
+        <Input id="21" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="22" state="Initial" path="1" test="3">
+    <TestStep id="23" name="create/ok" state="Initial">
+      <Operation id="24" name="create"/>
+    </TestStep>
+    <TestStep id="25" name="enterVatDeclaration/error" state="Initial" verify="true">
+      <Operation id="26" name="enterVatDeclaration">
+        <Input id="27" name="vatNumber" type="Vat" bound="true">99893577</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="28" state="Initial" path="1" test="4">
+    <TestStep id="29" name="create/ok" state="Initial">
+      <Operation id="30" name="create"/>
+    </TestStep>
+    <TestStep id="31" name="exitVatDeclaration/ok" state="Final" verify="true">
+      <Operation id="32" name="exitVatDeclaration"/>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="33" state="Initial" path="1" test="5">
+    <TestStep id="34" name="create/ok" state="Initial">
+      <Operation id="35" name="create"/>
+    </TestStep>
+    <TestStep id="36" name="addInvoice/ignore[ok]" state="Initial" verify="true">
+      <Operation id="37" name="addInvoice">
+        <Input id="38" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="39" state="Initial" path="1" test="6">
+    <TestStep id="40" name="create/ok" state="Initial">
+      <Operation id="41" name="create"/>
+    </TestStep>
+    <TestStep id="42" name="removeInvoice/ignore[error]" state="Initial" verify="true">
+      <Operation id="43" name="removeInvoice">
+        <Input id="44" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="45" state="Initial" path="1" test="7">
+    <TestStep id="46" name="create/ok" state="Initial">
+      <Operation id="47" name="create"/>
+    </TestStep>
+    <TestStep id="48" name="performClearance/ignore[error]" state="Initial" verify="true">
+      <Operation id="49" name="performClearance"/>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="50" state="Initial" path="1" test="8">
+    <TestStep id="51" name="create/ok" state="Initial">
+      <Operation id="52" name="create"/>
+    </TestStep>
+    <TestStep id="53" name="payAmount/ignore[credit]" state="Initial" verify="true">
+      <Operation id="54" name="payAmount">
+        <Output id="55" name="refund" type="Double"/>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="56" state="VatDeclaration" path="1" test="9">
+    <TestStep id="57" name="create/ok" state="Initial">
+      <Operation id="58" name="create"/>
+    </TestStep>
+    <TestStep id="59" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="60" name="enterVatDeclaration">
+        <Input id="61" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="62" name="enterVatDeclaration/ignore[ok]" state="VatDeclaration" verify="true">
+      <Operation id="63" name="enterVatDeclaration">
+        <Input id="64" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="65" state="VatDeclaration" path="1" test="10">
+    <TestStep id="66" name="create/ok" state="Initial">
+      <Operation id="67" name="create"/>
+    </TestStep>
+    <TestStep id="68" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="69" name="enterVatDeclaration">
+        <Input id="70" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="71" name="enterVatDeclaration/ignore[error]" state="VatDeclaration" verify="true">
+      <Operation id="72" name="enterVatDeclaration">
+        <Input id="73" name="vatNumber" type="Vat" bound="true">99893577</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="74" state="VatDeclaration" path="1" test="11">
+    <TestStep id="75" name="create/ok" state="Initial">
+      <Operation id="76" name="create"/>
+    </TestStep>
+    <TestStep id="77" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="78" name="enterVatDeclaration">
+        <Input id="79" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="80" name="exitVatDeclaration/ok" state="Final" verify="true">
+      <Operation id="81" name="exitVatDeclaration"/>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="82" state="VatDeclaration" path="1" test="12">
+    <TestStep id="83" name="create/ok" state="Initial">
+      <Operation id="84" name="create"/>
+    </TestStep>
+    <TestStep id="85" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="86" name="enterVatDeclaration">
+        <Input id="87" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="88" name="addInvoice/ok" state="VatDeclaration" verify="true">
+      <Operation id="89" name="addInvoice">
+        <Input id="90" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="91" state="VatDeclaration" path="1" test="13">
+    <TestStep id="92" name="create/ok" state="Initial">
+      <Operation id="93" name="create"/>
+    </TestStep>
+    <TestStep id="94" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="95" name="enterVatDeclaration">
+        <Input id="96" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="97" name="removeInvoice/error" state="VatDeclaration" verify="true">
+      <Operation id="98" name="removeInvoice">
+        <Input id="99" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="100" state="VatDeclaration" path="1" test="14">
+    <TestStep id="101" name="create/ok" state="Initial">
+      <Operation id="102" name="create"/>
+    </TestStep>
+    <TestStep id="103" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="104" name="enterVatDeclaration">
+        <Input id="105" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="106" name="performClearance/error" state="VatDeclaration" verify="true">
+      <Operation id="107" name="performClearance"/>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="108" state="VatDeclaration" path="1" test="15">
+    <TestStep id="109" name="create/ok" state="Initial">
+      <Operation id="110" name="create"/>
+    </TestStep>
+    <TestStep id="111" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="112" name="enterVatDeclaration">
+        <Input id="113" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="114" name="payAmount/ignore[credit]" state="VatDeclaration" verify="true">
+      <Operation id="115" name="payAmount">
+        <Output id="116" name="refund" type="Double"/>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="117" state="Final" path="1" test="16">
+    <TestStep id="118" name="create/ok" state="Initial">
+      <Operation id="119" name="create"/>
+    </TestStep>
+    <TestStep id="120" name="exitVatDeclaration/ok" state="Final">
+      <Operation id="121" name="exitVatDeclaration"/>
+    </TestStep>
+    <TestStep id="122" name="enterVatDeclaration/ignore[ok]" state="Final" verify="true">
+      <Operation id="123" name="enterVatDeclaration">
+        <Input id="124" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="125" state="Final" path="1" test="17">
+    <TestStep id="126" name="create/ok" state="Initial">
+      <Operation id="127" name="create"/>
+    </TestStep>
+    <TestStep id="128" name="exitVatDeclaration/ok" state="Final">
+      <Operation id="129" name="exitVatDeclaration"/>
+    </TestStep>
+    <TestStep id="130" name="enterVatDeclaration/ignore[error]" state="Final" verify="true">
+      <Operation id="131" name="enterVatDeclaration">
+        <Input id="132" name="vatNumber" type="Vat" bound="true">99893577</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="133" state="Final" path="1" test="18">
+    <TestStep id="134" name="create/ok" state="Initial">
+      <Operation id="135" name="create"/>
+    </TestStep>
+    <TestStep id="136" name="exitVatDeclaration/ok" state="Final">
+      <Operation id="137" name="exitVatDeclaration"/>
+    </TestStep>
+    <TestStep id="138" name="exitVatDeclaration/ignore[ok]" state="Final" verify="true">
+      <Operation id="139" name="exitVatDeclaration"/>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="140" state="Final" path="1" test="19">
+    <TestStep id="141" name="create/ok" state="Initial">
+      <Operation id="142" name="create"/>
+    </TestStep>
+    <TestStep id="143" name="exitVatDeclaration/ok" state="Final">
+      <Operation id="144" name="exitVatDeclaration"/>
+    </TestStep>
+    <TestStep id="145" name="addInvoice/ignore[ok]" state="Final" verify="true">
+      <Operation id="146" name="addInvoice">
+        <Input id="147" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="148" state="Final" path="1" test="20">
+    <TestStep id="149" name="create/ok" state="Initial">
+      <Operation id="150" name="create"/>
+    </TestStep>
+    <TestStep id="151" name="exitVatDeclaration/ok" state="Final">
+      <Operation id="152" name="exitVatDeclaration"/>
+    </TestStep>
+    <TestStep id="153" name="removeInvoice/ignore[error]" state="Final" verify="true">
+      <Operation id="154" name="removeInvoice">
+        <Input id="155" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="156" state="Final" path="1" test="21">
+    <TestStep id="157" name="create/ok" state="Initial">
+      <Operation id="158" name="create"/>
+    </TestStep>
+    <TestStep id="159" name="exitVatDeclaration/ok" state="Final">
+      <Operation id="160" name="exitVatDeclaration"/>
+    </TestStep>
+    <TestStep id="161" name="performClearance/ignore[error]" state="Final" verify="true">
+      <Operation id="162" name="performClearance"/>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="163" state="Final" path="1" test="22">
+    <TestStep id="164" name="create/ok" state="Initial">
+      <Operation id="165" name="create"/>
+    </TestStep>
+    <TestStep id="166" name="exitVatDeclaration/ok" state="Final">
+      <Operation id="167" name="exitVatDeclaration"/>
+    </TestStep>
+    <TestStep id="168" name="payAmount/ignore[credit]" state="Final" verify="true">
+      <Operation id="169" name="payAmount">
+        <Output id="170" name="refund" type="Double"/>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="171" state="Clearance" path="0" test="23">
+    <TestStep id="172" name="create/ok" state="Initial">
+      <Operation id="173" name="create"/>
+    </TestStep>
+    <TestStep id="174" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="175" name="enterVatDeclaration">
+        <Input id="176" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="177" name="addInvoice/ok" state="VatDeclaration">
+      <Operation id="178" name="addInvoice">
+        <Input id="179" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="180" name="performClearance/ok" state="Clearance" verify="true">
+      <Operation id="181" name="performClearance"/>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="182" state="Clearance" path="1" test="24">
+    <TestStep id="183" name="create/ok" state="Initial">
+      <Operation id="184" name="create"/>
+    </TestStep>
+    <TestStep id="185" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="186" name="enterVatDeclaration">
+        <Input id="187" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="188" name="addInvoice/ok" state="VatDeclaration">
+      <Operation id="189" name="addInvoice">
+        <Input id="190" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="191" name="performClearance/ok" state="Clearance">
+      <Operation id="192" name="performClearance"/>
+    </TestStep>
+    <TestStep id="193" name="enterVatDeclaration/ignore[ok]" state="Clearance" verify="true">
+      <Operation id="194" name="enterVatDeclaration">
+        <Input id="195" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="196" state="Clearance" path="1" test="25">
+    <TestStep id="197" name="create/ok" state="Initial">
+      <Operation id="198" name="create"/>
+    </TestStep>
+    <TestStep id="199" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="200" name="enterVatDeclaration">
+        <Input id="201" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="202" name="addInvoice/ok" state="VatDeclaration">
+      <Operation id="203" name="addInvoice">
+        <Input id="204" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="205" name="performClearance/ok" state="Clearance">
+      <Operation id="206" name="performClearance"/>
+    </TestStep>
+    <TestStep id="207" name="enterVatDeclaration/ignore[error]" state="Clearance" verify="true">
+      <Operation id="208" name="enterVatDeclaration">
+        <Input id="209" name="vatNumber" type="Vat" bound="true">99893577</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="210" state="Clearance" path="1" test="26">
+    <TestStep id="211" name="create/ok" state="Initial">
+      <Operation id="212" name="create"/>
+    </TestStep>
+    <TestStep id="213" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="214" name="enterVatDeclaration">
+        <Input id="215" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="216" name="addInvoice/ok" state="VatDeclaration">
+      <Operation id="217" name="addInvoice">
+        <Input id="218" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="219" name="performClearance/ok" state="Clearance">
+      <Operation id="220" name="performClearance"/>
+    </TestStep>
+    <TestStep id="221" name="exitVatDeclaration/ok" state="Final" verify="true">
+      <Operation id="222" name="exitVatDeclaration"/>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="223" state="Clearance" path="1" test="27">
+    <TestStep id="224" name="create/ok" state="Initial">
+      <Operation id="225" name="create"/>
+    </TestStep>
+    <TestStep id="226" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="227" name="enterVatDeclaration">
+        <Input id="228" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="229" name="addInvoice/ok" state="VatDeclaration">
+      <Operation id="230" name="addInvoice">
+        <Input id="231" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="232" name="performClearance/ok" state="Clearance">
+      <Operation id="233" name="performClearance"/>
+    </TestStep>
+    <TestStep id="234" name="addInvoice/ignore[ok]" state="Clearance" verify="true">
+      <Operation id="235" name="addInvoice">
+        <Input id="236" name="invoice" type="Invoice" bound="true">invoice2</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="237" state="Clearance" path="1" test="28">
+    <TestStep id="238" name="create/ok" state="Initial">
+      <Operation id="239" name="create"/>
+    </TestStep>
+    <TestStep id="240" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="241" name="enterVatDeclaration">
+        <Input id="242" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="243" name="addInvoice/ok" state="VatDeclaration">
+      <Operation id="244" name="addInvoice">
+        <Input id="245" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="246" name="performClearance/ok" state="Clearance">
+      <Operation id="247" name="performClearance"/>
+    </TestStep>
+    <TestStep id="248" name="addInvoice/ignore[error]" state="Clearance" verify="true">
+      <Operation id="249" name="addInvoice">
+        <Input id="250" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="251" state="Clearance" path="1" test="29">
+    <TestStep id="252" name="create/ok" state="Initial">
+      <Operation id="253" name="create"/>
+    </TestStep>
+    <TestStep id="254" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="255" name="enterVatDeclaration">
+        <Input id="256" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="257" name="addInvoice/ok" state="VatDeclaration">
+      <Operation id="258" name="addInvoice">
+        <Input id="259" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="260" name="performClearance/ok" state="Clearance">
+      <Operation id="261" name="performClearance"/>
+    </TestStep>
+    <TestStep id="262" name="removeInvoice/ignore[ok]" state="Clearance" verify="true">
+      <Operation id="263" name="removeInvoice">
+        <Input id="264" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="265" state="Clearance" path="1" test="30">
+    <TestStep id="266" name="create/ok" state="Initial">
+      <Operation id="267" name="create"/>
+    </TestStep>
+    <TestStep id="268" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="269" name="enterVatDeclaration">
+        <Input id="270" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="271" name="addInvoice/ok" state="VatDeclaration">
+      <Operation id="272" name="addInvoice">
+        <Input id="273" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="274" name="performClearance/ok" state="Clearance">
+      <Operation id="275" name="performClearance"/>
+    </TestStep>
+    <TestStep id="276" name="removeInvoice/ignore[error]" state="Clearance" verify="true">
+      <Operation id="277" name="removeInvoice">
+        <Input id="278" name="invoice" type="Invoice" bound="true">invoice2</Input>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="279" state="Clearance" path="1" test="31">
+    <TestStep id="280" name="create/ok" state="Initial">
+      <Operation id="281" name="create"/>
+    </TestStep>
+    <TestStep id="282" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="283" name="enterVatDeclaration">
+        <Input id="284" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="285" name="addInvoice/ok" state="VatDeclaration">
+      <Operation id="286" name="addInvoice">
+        <Input id="287" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="288" name="performClearance/ok" state="Clearance">
+      <Operation id="289" name="performClearance"/>
+    </TestStep>
+    <TestStep id="290" name="performClearance/ignore[ok]" state="Clearance" verify="true">
+      <Operation id="291" name="performClearance"/>
+    </TestStep>
+  </TestSequence>
+  <TestSequence id="292" state="Clearance" path="1" test="32">
+    <TestStep id="293" name="create/ok" state="Initial">
+      <Operation id="294" name="create"/>
+    </TestStep>
+    <TestStep id="295" name="enterVatDeclaration/ok" state="VatDeclaration">
+      <Operation id="296" name="enterVatDeclaration">
+        <Input id="297" name="vatNumber" type="Vat" bound="true">107539588</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="298" name="addInvoice/ok" state="VatDeclaration">
+      <Operation id="299" name="addInvoice">
+        <Input id="300" name="invoice" type="Invoice" bound="true">invoice1</Input>
+      </Operation>
+    </TestStep>
+    <TestStep id="301" name="performClearance/ok" state="Clearance">
+      <Operation id="302" name="performClearance"/>
+    </TestStep>
+    <TestStep id="303" name="payAmount/debit" state="Final" verify="true">
+      <Operation id="304" name="payAmount">
+        <Output id="305" name="refund" type="Double" bound="true">0.0</Output>
+      </Operation>
+    </TestStep>
+  </TestSequence>
+</TestSuite>

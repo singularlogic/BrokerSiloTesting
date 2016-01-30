@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Protocol id="0" name="VatClearance">
+  <Notice id="1" text="Verification report for protocol: VatClearance">
+    <Analysis id="2" text="Memory is correctly initialised"/>
+    <Analysis id="3" text="Operation is deterministic: enterVatDeclaration(vatNumber)"/>
+    <Analysis id="4" text="Operation is deterministic: exitVatDeclaration()"/>
+    <Analysis id="5" text="Operation is deterministic: addInvoice(invoice)"/>
+    <Analysis id="6" text="Operation is deterministic: removeInvoice(invoice)"/>
+    <Analysis id="7" text="Operation is deterministic: performClearance()"/>
+    <Analysis id="8" text="Operation is deterministic: payAmount()"/>
+  </Notice>
+  <Memory id="9" name="VatClearance">
+    <Notice id="10" text="Initialisation check for memory: VatClearance">
+      <Analysis id="11" text="Memory is correctly initialised"/>
+    </Notice>
+    <Constant id="12" name="one" type="Integer">1</Constant>
+    <Constant id="13" name="zeroDouble" type="Double"/>
+    <Constant id="14" name="validVat" type="Vat">107539588</Constant>
+    <Constant id="15" name="invalidVat" type="Vat">99893577</Constant>
+    <Constant id="16" name="someInvoices" type="List[Invoice]">[invoice1, invoice2, invoice3, invoice4, invoice5, invoice6]</Constant>
+    <Constant id="17" name="vatBlacklist" type="Set[Vat]">[99893577, 99893578, 99893579, 99893580, 99893581]</Constant>
+    <Constant id="18" name="invoiceAmounts" type="Map[Invoice, Double]">{invoice1=1000.0, invoice2=-2000.0, invoice3=1500.0, invoice4=900.0, invoice5=-1000.0, invoice6=200.0}</Constant>
+    <Constant id="19" name="emptyInvoices" type="Set[Invoice]"/>
+    <Variable id="20" name="declaredInvoices" type="Set[Invoice]"/>
+    <Variable id="21" name="totalTax" type="Double"/>
+    <Variable id="22" name="invoiceCount" type="Integer"/>
+    <Binding id="23">
+      <Assignment id="24" name="equals" type="Void">
+        <Variable ref="20" name="declaredInvoices"/>
+        <Constant ref="19" name="emptyInvoices"/>
+      </Assignment>
+      <Assignment id="25" name="equals" type="Void">
+        <Variable ref="21" name="totalTax"/>
+        <Constant ref="13" name="zeroDouble"/>
+      </Assignment>
+      <Assignment id="26" name="equals" type="Void">
+        <Variable ref="22" name="invoiceCount"/>
+        <Constant ref="12" name="one"/>
+      </Assignment>
+    </Binding>
+  </Memory>
+  <Operation id="27" name="enterVatDeclaration">
+    <Notice id="28" text="Completeness check for operation: enterVatDeclaration">
+      <Notice id="29" text="Valid partitions of the input/memory space:">
+        <Analysis id="30" text="input 1 = excludes(vatBlacklist, vatNumber)"/>
+        <Analysis id="31" text="input 2 = includes(vatBlacklist, vatNumber)"/>
+      </Notice>
+      <Analysis id="32" text="Scenario enterVatDeclaration/ok accepts input 1"/>
+      <Analysis id="33" text="Scenario enterVatDeclaration/error accepts input 2"/>
+    </Notice>
+    <Input id="34" name="vatNumber" type="Vat"/>
+    <Scenario id="35" name="enterVatDeclaration/ok">
+      <Binding id="36">
+        <Assignment id="37" name="equals" type="Void">
+          <Input ref="34" name="vatNumber"/>
+          <Constant ref="14" name="validVat"/>
+        </Assignment>
+      </Binding>
+      <Condition id="38">
+        <Membership id="39" name="excludes" type="Boolean">
+          <Constant ref="17" name="vatBlacklist"/>
+          <Input ref="34" name="vatNumber"/>
+        </Membership>
+      </Condition>
+    </Scenario>
+    <Scenario id="40" name="enterVatDeclaration/error">
+      <Binding id="41">
+        <Assignment id="42" name="equals" type="Void">
+          <Input ref="34" name="vatNumber"/>
+          <Constant ref="15" name="invalidVat"/>
+        </Assignment>
+      </Binding>
+      <Condition id="43">
+        <Membership id="44" name="includes" type="Boolean">
+          <Constant ref="17" name="vatBlacklist"/>
+          <Input ref="34" name="vatNumber"/>
+        </Membership>
+      </Condition>
+    </Scenario>
+  </Operation>
+  <Operation id="45" name="exitVatDeclaration">
+    <Notice id="46" text="Completeness check for operation: exitVatDeclaration">
+      <Notice id="47" text="No partitioning of the input/memory space"/>
+      <Analysis id="48" text="Scenario exitVatDeclaration/ok accepts universal input"/>
+    </Notice>
+    <Scenario id="49" name="exitVatDeclaration/ok">
+      <Effect id="50">
+        <Assignment id="51" name="equals" type="Void">
+          <Variable ref="20" name="declaredInvoices"/>
+          <Constant ref="19" name="emptyInvoices"/>
+        </Assignment>
+        <Assignment id="52" name="equals" type="Void">
+          <Variable ref="21" name="totalTax"/>
+          <Constant ref="13" name="zeroDouble"/>
+        </Assignment>
+        <Assignment id="53" name="equals" type="Void">
+          <Variable ref="22" name="invoiceCount"/>
+          <Constant ref="12" name="one"/>
+        </Assignment>
+      </Effect>
+    </Scenario>
+  </Operation>
+  <Operation id="54" name="addInvoice">
+    <Notice id="55" text="Completeness check for operation: addInvoice">
+      <Notice id="56" text="Valid partitions of the input/memory space:">
+        <Analysis id="57" text="input 1 = excludes(declaredInvoices, invoice)"/>
+        <Analysis id="58" text="input 2 = includes(declaredInvoices, invoice)"/>
+      </Notice>
+      <Analysis id="59" text="Scenario addInvoice/ok accepts input 1"/>
+      <Analysis id="60" text="Scenario addInvoice/error accepts input 2"/>
+    </Notice>
+    <Input id="61" name="invoice" type="Invoice"/>
+    <Scenario id="62" name="addInvoice/ok">
+      <Binding id="63">
+        <Assignment id="64" name="equals" type="Void">
+          <Input ref="61" name="invoice"/>
+          <Manipulation id="65" name="searchAt" type="Invoice">
+            <Constant ref="16" name="someInvoices"/>
+            <Variable ref="22" name="invoiceCount"/>
+          </Manipulation>
+        </Assignment>
+      </Binding>
+      <Condition id="66">
+        <Membership id="67" name="excludes" type="Boolean">
+          <Variable ref="20" name="declaredInvoices"/>
+          <Input ref="61" name="invoice"/>
+        </Membership>
+      </Condition>
+      <Effect id="68">
+        <Assignment id="69" name="moreThan" type="Void">
+          <Variable ref="22" name="invoiceCount"/>
+        </Assignment>
+        <Assignment id="70" name="equals" type="Void">
+          <Variable ref="20" name="declaredInvoices"/>
+          <Manipulation id="71" name="insert" type="Set[Invoice]">
+            <Variable ref="20" name="declaredInvoices"/>
+            <Input ref="61" name="invoice"/>
+          </Manipulation>
+        </Assignment>
+        <Assignment id="72" name="equals" type="Void">
+          <Variable ref="21" name="totalTax"/>
+          <Arithmetic id="73" name="plus" type="Double">
+            <Variable ref="21" name="totalTax"/>
+            <Manipulation id="74" name="searchAt" type="Double">
+              <Constant ref="18" name="invoiceAmounts"/>
+              <Input ref="61" name="invoice"/>
+            </Manipulation>
+          </Arithmetic>
+        </Assignment>
+      </Effect>
+    </Scenario>
+    <Scenario id="75" name="addInvoice/error">
+      <Binding id="76">
+        <Assignment id="77" name="equals" type="Void">
+          <Input ref="61" name="invoice"/>
+          <Manipulation id="78" name="searchAt" type="Invoice">
+            <Constant ref="16" name="someInvoices"/>
+            <Constant ref="12" name="one"/>
+          </Manipulation>
+        </Assignment>
+      </Binding>
+      <Condition id="79">
+        <Membership id="80" name="includes" type="Boolean">
+          <Variable ref="20" name="declaredInvoices"/>
+          <Input ref="61" name="invoice"/>
+        </Membership>
+      </Condition>
+    </Scenario>
+  </Operation>
+  <Operation id="81" name="removeInvoice">
+    <Notice id="82" text="Completeness check for operation: removeInvoice">
+      <Notice id="83" text="Valid partitions of the input/memory space:">
+        <Analysis id="84" text="input 1 = includes(declaredInvoices, invoice)"/>
+        <Analysis id="85" text="input 2 = excludes(declaredInvoices, invoice)"/>
+      </Notice>
+      <Analysis id="86" text="Scenario removeInvoice/ok accepts input 1"/>
+      <Analysis id="87" text="Scenario removeInvoice/error accepts input 2"/>
+    </Notice>
+    <Input id="88" name="invoice" type="Invoice"/>
+    <Scenario id="89" name="removeInvoice/ok">
+      <Binding id="90">
+        <Assignment id="91" name="equals" type="Void">
+          <Input ref="88" name="invoice"/>
+          <Manipulation id="92" name="searchAt" type="Invoice">
+            <Constant ref="16" name="someInvoices"/>
+            <Constant ref="12" name="one"/>
+          </Manipulation>
+        </Assignment>
+      </Binding>
+      <Condition id="93">
+        <Membership id="94" name="includes" type="Boolean">
+          <Variable ref="20" name="declaredInvoices"/>
+          <Input ref="88" name="invoice"/>
+        </Membership>
+      </Condition>
+      <Effect id="95">
+        <Assignment id="96" name="equals" type="Void">
+          <Variable ref="20" name="declaredInvoices"/>
+          <Manipulation id="97" name="remove" type="Set[Invoice]">
+            <Variable ref="20" name="declaredInvoices"/>
+            <Input ref="88" name="invoice"/>
+          </Manipulation>
+        </Assignment>
+        <Assignment id="98" name="equals" type="Void">
+          <Variable ref="21" name="totalTax"/>
+          <Arithmetic id="99" name="minus" type="Double">
+            <Variable ref="21" name="totalTax"/>
+            <Manipulation id="100" name="searchAt" type="Double">
+              <Constant ref="18" name="invoiceAmounts"/>
+              <Input ref="88" name="invoice"/>
+            </Manipulation>
+          </Arithmetic>
+        </Assignment>
+      </Effect>
+    </Scenario>
+    <Scenario id="101" name="removeInvoice/error">
+      <Binding id="102">
+        <Assignment id="103" name="equals" type="Void">
+          <Input ref="88" name="invoice"/>
+          <Manipulation id="104" name="searchAt" type="Invoice">
+            <Constant ref="16" name="someInvoices"/>
+            <Variable ref="22" name="invoiceCount"/>
+          </Manipulation>
+        </Assignment>
+      </Binding>
+      <Condition id="105">
+        <Membership id="106" name="excludes" type="Boolean">
+          <Variable ref="20" name="declaredInvoices"/>
+          <Input ref="88" name="invoice"/>
+        </Membership>
+      </Condition>
+    </Scenario>
+  </Operation>
+  <Operation id="107" name="performClearance">
+    <Notice id="108" text="Completeness check for operation: performClearance">
+      <Notice id="109" text="Valid partitions of the input/memory space:">
+        <Analysis id="110" text="input 1 = notEmpty(declaredInvoices)"/>
+        <Analysis id="111" text="input 2 = isEmpty(declaredInvoices)"/>
+      </Notice>
+      <Analysis id="112" text="Scenario performClearance/ok accepts input 1"/>
+      <Analysis id="113" text="Scenario performClearance/error accepts input 2"/>
+    </Notice>
+    <Scenario id="114" name="performClearance/ok">
+      <Condition id="115">
+        <Membership id="116" name="notEmpty" type="Boolean">
+          <Variable ref="20" name="declaredInvoices"/>
+        </Membership>
+      </Condition>
+    </Scenario>
+    <Scenario id="117" name="performClearance/error">
+      <Condition id="118">
+        <Membership id="119" name="isEmpty" type="Boolean">
+          <Variable ref="20" name="declaredInvoices"/>
+        </Membership>
+      </Condition>
+    </Scenario>
+  </Operation>
+  <Operation id="120" name="payAmount">
+    <Notice id="121" text="Completeness check for operation: payAmount">
+      <Notice id="122" text="Valid partitions of the input/memory space:">
+        <Analysis id="123" text="input 1 = moreThan(totalTax, zeroDouble)"/>
+        <Analysis id="124" text="input 2 = equals(totalTax, zeroDouble)"/>
+        <Analysis id="125" text="input 3 = lessThan(totalTax, zeroDouble)"/>
+      </Notice>
+      <Analysis id="126" text="Scenario payAmount/debit accepts input 1"/>
+      <Analysis id="127" text="Scenario payAmount/credit accepts input 2"/>
+      <Analysis id="128" text="Scenario payAmount/credit accepts input 3"/>
+    </Notice>
+    <Output id="129" name="refund" type="Double"/>
+    <Scenario id="130" name="payAmount/debit">
+      <Condition id="131">
+        <Comparison id="132" name="moreThan" type="Boolean">
+          <Variable ref="21" name="totalTax"/>
+          <Constant ref="13" name="zeroDouble"/>
+        </Comparison>
+      </Condition>
+      <Effect id="133">
+        <Assignment id="134" name="equals" type="Void">
+          <Variable ref="21" name="totalTax"/>
+          <Constant ref="13" name="zeroDouble"/>
+        </Assignment>
+        <Assignment id="135" name="equals" type="Void">
+          <Output ref="129" name="refund"/>
+          <Constant ref="13" name="zeroDouble"/>
+        </Assignment>
+      </Effect>
+    </Scenario>
+    <Scenario id="136" name="payAmount/credit">
+      <Condition id="137">
+        <Comparison id="138" name="notMoreThan" type="Boolean">
+          <Variable ref="21" name="totalTax"/>
+          <Constant ref="13" name="zeroDouble"/>
+        </Comparison>
+      </Condition>
+      <Effect id="139">
+        <Assignment id="140" name="equals" type="Void">
+          <Output ref="129" name="refund"/>
+          <Arithmetic id="141" name="negate" type="Double">
+            <Variable ref="21" name="totalTax"/>
+          </Arithmetic>
+        </Assignment>
+        <Assignment id="142" name="equals" type="Void">
+          <Variable ref="21" name="totalTax"/>
+          <Constant ref="13" name="zeroDouble"/>
+        </Assignment>
+      </Effect>
+    </Scenario>
+  </Operation>
+</Protocol>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Machine id="0" name="VatClearance">
+  <Notice id="1" text="Validation report for machine: VatClearance">
+    <Analysis id="2" text="Events are ignored in State: Initial"/>
+    <Analysis id="3" text="Events are ignored in State: VatDeclaration"/>
+    <Analysis id="4" text="Events are ignored in State: Clearance"/>
+    <Analysis id="5" text="Events are ignored in State: Final"/>
+  </Notice>
+  <State id="6" name="Initial" initial="true">
+    <Notice id="7" text="Completeness check for state: Initial">
+      <Analysis id="8" text="State ignores the events:">
+        <Event id="9" name="addInvoice/ok"/>
+        <Event id="10" name="addInvoice/error"/>
+        <Event id="11" name="removeInvoice/ok"/>
+        <Event id="12" name="removeInvoice/error"/>
+        <Event id="13" name="performClearance/ok"/>
+        <Event id="14" name="performClearance/error"/>
+        <Event id="15" name="payAmount/debit"/>
+        <Event id="16" name="payAmount/credit"/>
+      </Analysis>
+    </Notice>
+    <Transition id="17" name="enterVatDeclaration/ok" source="Initial" target="VatDeclaration"/>
+    <Transition id="18" name="enterVatDeclaration/error" source="Initial" target="Initial"/>
+    <Transition id="19" name="exitVatDeclaration/ok" source="Initial" target="Final"/>
+  </State>
+  <State id="20" name="VatDeclaration">
+    <Notice id="21" text="Completeness check for state: VatDeclaration">
+      <Analysis id="22" text="State ignores the events:">
+        <Event id="23" name="enterVatDeclaration/ok"/>
+        <Event id="24" name="enterVatDeclaration/error"/>
+        <Event ref="15" name="payAmount/debit"/>
+        <Event ref="16" name="payAmount/credit"/>
+      </Analysis>
+    </Notice>
+    <Transition id="25" name="addInvoice/ok" source="VatDeclaration" target="VatDeclaration"/>
+    <Transition id="26" name="addInvoice/error" source="VatDeclaration" target="VatDeclaration"/>
+    <Transition id="27" name="removeInvoice/ok" source="VatDeclaration" target="VatDeclaration"/>
+    <Transition id="28" name="removeInvoice/error" source="VatDeclaration" target="VatDeclaration"/>
+    <Transition id="29" name="performClearance/ok" source="VatDeclaration" target="Clearance"/>
+    <Transition id="30" name="performClearance/error" source="VatDeclaration" target="VatDeclaration"/>
+    <Transition id="31" name="exitVatDeclaration/ok" source="VatDeclaration" target="Final"/>
+  </State>
+  <State id="32" name="Clearance">
+    <Notice id="33" text="Completeness check for state: Clearance">
+      <Analysis id="34" text="State ignores the events:">
+        <Event ref="23" name="enterVatDeclaration/ok"/>
+        <Event ref="24" name="enterVatDeclaration/error"/>
+        <Event ref="9" name="addInvoice/ok"/>
+        <Event ref="10" name="addInvoice/error"/>
+        <Event ref="11" name="removeInvoice/ok"/>
+        <Event ref="12" name="removeInvoice/error"/>
+        <Event ref="13" name="performClearance/ok"/>
+        <Event ref="14" name="performClearance/error"/>
+      </Analysis>
+    </Notice>
+    <Transition id="35" name="payAmount/debit" source="Clearance" target="Final"/>
+    <Transition id="36" name="payAmount/credit" source="Clearance" target="Final"/>
+    <Transition id="37" name="exitVatDeclaration/ok" source="Clearance" target="Final"/>
+  </State>
+  <State id="38" name="Final">
+    <Notice id="39" text="Completeness check for state: Final">
+      <Analysis id="40" text="State ignores the events:">
+        <Event ref="23" name="enterVatDeclaration/ok"/>
+        <Event ref="24" name="enterVatDeclaration/error"/>
+        <Event id="41" name="exitVatDeclaration/ok"/>
+        <Event ref="9" name="addInvoice/ok"/>
+        <Event ref="10" name="addInvoice/error"/>
+        <Event ref="11" name="removeInvoice/ok"/>
+        <Event ref="12" name="removeInvoice/error"/>
+        <Event ref="13" name="performClearance/ok"/>
+        <Event ref="14" name="performClearance/error"/>
+        <Event ref="15" name="payAmount/debit"/>
+        <Event ref="16" name="payAmount/credit"/>
+      </Analysis>
+    </Notice>
+  </State>
+</Machine>

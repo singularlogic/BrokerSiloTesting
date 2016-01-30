@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Service name="VatClearance" testDepth="4"
+	xsi:noNamespaceSchemaLocation="ServiceSchema.xsd">
+
+	<Protocol name="VatClearance">
+	
+		<Memory name="VatClearance">
+		
+			<Constant name="one" type="Integer">1</Constant>
+			<Constant name="zeroDouble" type="Double"/>
+		
+			<!-- Some test exemplars -->
+			
+			<Constant name="validVat" type="Vat">107539588</Constant>
+			<Constant name="invalidVat" type="Vat">99893577</Constant>
+			
+			<Constant name="someInvoices" type="List[Invoice]">
+				[invoice1, invoice2, invoice3, invoice4, invoice5, invoice6]
+			</Constant>
+			
+			<!-- The blacklist of bad VAT numbers -->
+			
+			<Constant name="vatBlacklist" type="Set[Vat]">
+				[99893577, 99893578, 99893579, 99893580, 99893581]
+			</Constant>
+			
+			<Constant name="invoiceAmounts" type="Map[Invoice, Double]">
+				{invoice1=1000.0, invoice2=-2000.0, invoice3=1500.0, invoice4=900.0, invoice5=-1000.0, invoice6=200.0}
+			</Constant>
+			
+			<!-- The empty collection of VAT invoice declarations -->
+			
+			<Constant name="emptyInvoices" type="Set[Invoice]"/>
+			
+			<!-- Global variables -->
+			
+			<Variable name="declaredInvoices" type="Set[Invoice]"/>
+			<Variable name="totalTax" type="Double"/>
+			<Variable name="invoiceCount" type="Integer"/>
+
+			<!-- Memory initialization -->
+			
+			<Binding>
+				<Assignment name="equals">
+					<Variable name="declaredInvoices"/>
+					<Constant name="emptyInvoices"/>
+				</Assignment>
+				<Assignment name="equals">
+					<Variable name="totalTax"/>
+					<Constant name="zeroDouble"/>
+				</Assignment>
+				<Assignment name="equals">
+					<Variable name="invoiceCount"/>
+					<Constant name="one"/>
+				</Assignment>
+			</Binding>
+
+		</Memory>
+		
+		<!-- Checks whether the VAT number is valid -->
+		
+		<Operation name="enterVatDeclaration">
+			<Input name="vatNumber" type="Vat"/>
+			
+			<!-- Reject the VAT number if it is on a blacklist -->
+			<Scenario name="enterVatDeclaration/ok">
+				<Binding>
+					<Assignment name="equals">
+						<Input name="vatNumber"/>
+						<Constant name="validVat"/>
+					</Assignment>
+				</Binding>
+				<Condition>
+					<Membership name="excludes">
+						<Constant name="vatBlacklist"/>
+						<Input name="vatNumber"/>
+					</Membership>
+				</Condition>
+			</Scenario>
+			
+			<!-- Accept the VAT number if it is not on a blacklist -->
+			<Scenario name="enterVatDeclaration/error">
+				<Binding>
+					<Assignment name="equals">
+						<Input name="vatNumber"/>
+						<Constant name="invalidVat"/>
+					</Assignment>
+				</Binding>
+				<Condition>
+					<Membership name="includes">
+						<Constant name="vatBlacklist"/>
+						<Input name="vatNumber"/>
+					</Membership>
+				</Condition>
+			</Scenario>
+		</Operation>
+		
+		
+		<!-- Aborts processing VAT invoices at any stage -->
+		
+		<Operation name="exitVatDeclaration">
+			<!-- has only one scenario that always succeeds -->
+			<Scenario name="exitVatDeclaration/ok">
+				<Effect>
+					<!-- reset all memory variables to their initial states -->
+					<Assignment name="equals">
+						<Variable name="declaredInvoices"/>
+						<Constant name="emptyInvoices"/>
+					</Assignment>
+					<Assignment name="equals">
+						<Variable name="totalTax"/>
+						<Constant name="zeroDouble"/>
+					</Assignment>
+					<Assignment name="equals">
+						<Variable name="invoiceCount"/>
+						<Constant name="one"/>
+					</Assignment>
+				</Effect>
+			</Scenario>
+		</Operation>
+
+
+		<!-- Adds an invoice to the set of declared VAT invoices -->
+		
+		<Operation name="addInvoice">
+			<Input name="invoice" type="Invoice"/>
+			
+			<!-- Adds an unseen invoice to the declared VAT invoices -->
+			<Scenario name="addInvoice/ok">
+				<Binding>
+					<Assignment name="equals">
+						<Input name="invoice"/>
+						<Manipulation name="searchAt">
+							<Constant name="someInvoices"/>
+							<Variable name="invoiceCount"/>
+						</Manipulation>
+					</Assignment>
+				</Binding>
+				<Condition>
+					<Membership name="excludes">
+						<Variable name="declaredInvoices"/>
+						<Input name="invoice"/>
+					</Membership>
+				</Condition>
+				<Effect>
+					<!-- Increment the invoice count (to pick a new one) -->
+					<Assignment name="moreThan">
+						<Variable name="invoiceCount"/>
+					</Assignment>
+					<!-- Add the invoice to the declared invoices -->
+					<Assignment name="equals">
+						<Variable name="declaredInvoices"/>
+						<Manipulation name="insert">
+							<Variable name="declaredInvoices"/>
+							<Input name="invoice"/>
+						</Manipulation>
+					</Assignment>
+					<!-- Add the amount of tax from the invoice to the total -->
+					<Assignment name="equals">
+						<Variable name="totalTax"/>
+						<Arithmetic name="plus">
+							<Variable name="totalTax"/>
+							<Manipulation name="searchAt">
+								<Constant name="invoiceAmounts"/>
+								<Input name="invoice"/>
+							</Manipulation>
+						</Arithmetic>
+					</Assignment>
+				</Effect>
+			</Scenario>
+			
+			<!-- Prevents adding a previously seen VAT invoice -->
+			<Scenario name="addInvoice/error">
+				<Binding>
+					<!-- Always picks the first invoice; eventually triggers this case -->
+					<Assignment name="equals">
+						<Input name="invoice"/>
+						<Manipulation name="searchAt">
+							<Constant name="someInvoices"/>
+							<Constant name="one"/>
+						</Manipulation>
+					</Assignment>
+				</Binding>
+				<Condition>
+					<Membership name="includes">
+						<Variable name="declaredInvoices"/>
+						<Input name="invoice"/>
+					</Membership>
+				</Condition>
+				<!-- No effect required -->
+			</Scenario>
+		</Operation>
+		
+		<Operation name="removeInvoice">
+			<Input name="invoice" type="Invoice"/>
+			
+			<!-- Removes a seen invoice from the declared VAT invoices -->
+			<Scenario name="removeInvoice/ok">
+				<Binding>
+					<!-- Triggered if at least one invoice has been added -->
+					<Assignment name="equals">
+						<Input name="invoice"/>
+						<Manipulation name="searchAt">
+							<Constant name="someInvoices"/>
+							<Constant name="one"/>
+						</Manipulation>
+					</Assignment>
+				</Binding>
+				<Condition>
+					<Membership name="includes">
+						<Variable name="declaredInvoices"/>
+						<Input name="invoice"/>
+					</Membership>
+				</Condition>
+				<Effect>
+					<!-- Remove the invoice from the declared invoices -->
+					<Assignment name="equals">
+						<Variable name="declaredInvoices"/>
+						<Manipulation name="remove">
+							<Variable name="declaredInvoices"/>
+							<Input name="invoice"/>
+						</Manipulation>
+					</Assignment>
+					<!-- Subtract the amount of tax on the invoice from the total -->
+					<Assignment name="equals">
+						<Variable name="totalTax"/>
+						<Arithmetic name="minus">
+							<Variable name="totalTax"/>
+							<Manipulation name="searchAt">
+								<Constant name="invoiceAmounts"/>
+								<Input name="invoice"/>
+							</Manipulation>
+						</Arithmetic>
+					</Assignment>
+				</Effect>
+			</Scenario>
+			
+			<!-- Prevents removing an unseen seen VAT invoice -->
+			<Scenario name="removeInvoice/error">
+				<Binding>
+					<!-- Always picks the next invoice; the list must have enough!  -->
+					<Assignment name="equals">
+						<Input name="invoice"/>
+						<Manipulation name="searchAt">
+							<Constant name="someInvoices"/>
+							<Variable name="invoiceCount"/>
+						</Manipulation>
+					</Assignment>
+				</Binding>
+				<Condition>
+					<Membership name="excludes">
+						<Variable name="declaredInvoices"/>
+						<Input name="invoice"/>
+					</Membership>
+				</Condition>
+				<!-- No effect required -->
+			</Scenario>
+		</Operation>
+		
+		
+		<!-- Processes the VAT clearance, if there are some invoices declared -->
+		
+		<Operation name="performClearance">
+		
+			<!-- If there are invoices to process, pass this stage -->
+			<Scenario name="performClearance/ok">
+				<Condition>
+					<Membership name="notEmpty">
+						<Variable name="declaredInvoices"/>
+					</Membership>
+				</Condition>
+			</Scenario>
+			
+			<!-- If there are no invoices to process, stick at this stage -->
+			<Scenario name="performClearance/error">
+				<Condition>
+					<Membership name="isEmpty">
+						<Variable name="declaredInvoices"/>
+					</Membership>
+				</Condition>
+			</Scenario>
+		</Operation>
+		
+		
+		<!-- Pay the total amount of tax owing for the processed invoices -->
+		
+		<Operation name="payAmount">
+			<Output name="refund" type="Double"/>
+		
+			<!-- Pay some tax if any tax is actually owing -->
+			<Scenario name="payAmount/debit">
+				<Condition>
+					<Comparison name="moreThan">
+						<Variable name="totalTax"/>
+						<Constant name="zeroDouble"/>
+					</Comparison>
+				</Condition>
+				
+				<!-- Pay the tax owing, no refund given -->
+				<Effect>
+					<Assignment name="equals">
+						<Variable name="totalTax"/>
+						<Constant name="zeroDouble"/>
+					</Assignment>
+					<Assignment name="equals">
+						<Output name="refund"/>
+						<Constant name="zeroDouble"/>
+					</Assignment>
+				</Effect>
+				
+			</Scenario>
+			
+			<!-- Claim a refund if no tax is actually owing -->
+			<Scenario name="payAmount/credit">
+				<Condition>
+					<Comparison name="notMoreThan">
+						<Variable name="totalTax"/>
+						<Constant name="zeroDouble"/>
+					</Comparison>
+				</Condition>
+				
+				<Effect>
+					<!-- Calculate the refund, set tax owing to zero -->
+					<Assignment name="equals">
+						<Output name="refund"/>
+						<Arithmetic name="negate">
+							<Variable name="totalTax"/>
+						</Arithmetic>
+					</Assignment>
+					<Assignment name="equals">
+						<Variable name="totalTax"/>
+						<Constant name="zeroDouble"/>
+					</Assignment>
+				</Effect>
+				
+			</Scenario>
+		</Operation>
+	
+	</Protocol>
+	
+	<Machine name="VatClearance">
+        <State name="Initial" initial="true">
+            <Transition name="enterVatDeclaration/ok" source="Initial" target="VatDeclaration"/>
+            <Transition name="enterVatDeclaration/error" source="Initial" target="Initial"/>
+            <Transition name="exitVatDeclaration/ok" source="Initial" target="Final"/>  	    
+        </State>
+        <State name="VatDeclaration">
+            <Transition name="addInvoice/ok" source="VatDeclaration" target="VatDeclaration"/>
+            <Transition name="addInvoice/error" source="VatDeclaration" target="VatDeclaration"/>
+            <Transition name="removeInvoice/ok" source="VatDeclaration" target="VatDeclaration"/>
+            <Transition name="removeInvoice/error" source="VatDeclaration" target="VatDeclaration"/>
+	    	<Transition name="performClearance/ok" source="VatDeclaration" target="Clearance"/>
+            <Transition name="performClearance/error" source="VatDeclaration" target="VatDeclaration"/>
+            <Transition name="exitVatDeclaration/ok" source="VatDeclaration" target="Final"/>
+        </State>
+        <State name="Clearance">
+            <Transition name="payAmount/debit" source="Clearance" target="Final"/>
+            <Transition name="payAmount/credit" source="Clearance" target="Final"/>
+            <Transition name="exitVatDeclaration/ok" source="Clearance" target="Final"/>
+        </State>
+        <State name="Final"/>        
+	</Machine>
+</Service>

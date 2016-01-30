@@ -1,0 +1,142 @@
+<html>
+<head>
+<title>
+Broker@Cloud VTTS 1.0
+</title>
+</head>
+<body>
+
+<p>This package contains Broker@Cloud components for modelling service
+specifications and test suites, and for modelling expressions in the formal
+expression language.
+It is part of the <strong>Broker@Cloud Verification and Testing Tool Suite, 
+v1.0</strong>, &copy; Anthony J H Simons and Raluca Lefticaru, 2015. 
+Main web site:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/</a>.
+</p>
+
+<h3>
+Package uk.ac.sheffield.vtts.model
+</h3>
+<p>This package contains Broker@Cloud components for modelling service
+specifications and test suites.  These classes constitute the metamodel for
+the tool suite.  This package should always be used by the JAST marshalling
+and unmarshalling tools <code>ASTReader</code> and <code>ASTWriter</code>, 
+which must be told where to find the Java mappings for parsed XML data.
+The metamodel classes are designed with suitable API conventions for 
+marshalling and umarshalling with JAST, which has the advantage that it
+requires no special annotations on classes to be marshalled as XML.
+</p>
+<p>
+The entire metamodel is designed according to object-oriented principles of
+classification, with inheritance of common attributes and methods.  The
+metamodel hierarchy is rooted in the type <code>Element</code>, which has
+<code>Named</code> as one of its more important subtypes, since many of the
+model components are named; and otherwise leads to an elaboration of concepts
+including expressions consisting of functions, predicates, parameters and
+assignments; finite state machines, with their alphabets, states and 
+transitions; or operations with their inputs, outputs and internal branches; 
+or test suites with their test sequences and individual test steps.
+</p>
+
+<h3>
+Specification Concepts
+</h3>
+<p>
+The type <code>Service</code> is the metamodel type standing for a complete
+service specification.  It encloses the two types <code>Protocol</code> and
+<code>Machine</code>, respectively denoting the operation protocol and the
+finite-state machine of the service.  The former describes each operation of
+the service's API in some detail, in terms of its expected inputs, outputs, 
+preconditions and effects.  The latter describes the high-level responsive 
+modes of the service API in which particular operations are available, or 
+disabled.
+</p>
+<p>
+The <code>Protocol</code> node contains a <code>Memory</code> node, describing
+<code>Constant</code> and <code>Variable</code> parameters used later in the
+specification.  The constants refer to ground values, or specific test values.
+The variables refer to the fine-grained memory states of the service.  The 
+<code>Protocol</code> node also contains a set of <code>Operation</code> 
+nodes, each describing one service operation with its <code>Input</code>,
+<code>Output</code> and <code>Failure</code> parameters.  Every 
+<code>Operation</code> consists of one or more <code>Scenario</code> nodes,
+denoting the different branching paths through the operation.  Each
+<code>Scenario</code> is usually triggered by a <code>Condition</code> and may
+optionally have an <code>Effect</code>, updating memory variables.
+</p>  
+<p>
+The <code>Machine</code> node contains several <code>State</code> nodes 
+denoting the high-level responsive modes, or states of the service, and each
+of these contains <code>Transition</code> nodes that exit from that source 
+state, and enter another named target state.  Each <code>Transition</code> 
+has a label that corresponds exactly to the name of one <code>Scenario</code>
+from an <code>Operation</code>.  This links the two parts of a specification.
+Where no exit-transition exists from a given state, this is understood to mean
+that the given request is ignored in that state.
+</p>
+
+<h3>
+Test Suite Concepts
+</h3>
+<p>
+The type <code>TestSuite</code> is the metamodel type standing for a complete
+generated test suite.  It contains an ordered set of <code>TestSequence</code>
+nodes, representing the tests to be executed on some service, in that order, 
+so that all test failures are caught at the earliest point.  The testing
+method assumes that the service starts from a clean state (after creation, or
+after a reset).  Each <code>TestSequence</code> consists of a sequence of
+<code>TestStep</code> steps, each naming an <code>Operation</code> to invoke,
+the <code>Input</code> parameters to supply and the <code>Output</code> (or
+<code>Failure</code>) parameters to expect.  The initial test steps in a test
+sequence are to set up a unique memory-state, and the final test step is to be
+verified, in the same way that a JUnit test author would write assertions to 
+verify outcomes.
+</p>
+<p>
+The <code>TestSuite</code> node is designed to receive a visitor (in the 
+sense of the <em>Visitor Design Pattern</em>) of the interface type
+<code>Grounding</code>.  Specific implementations of this interface will
+generate platform-specific code from the technology-neutral test suite.
+Several example groundings are given in another package, as illustrations of 
+how to ground to Java, SOAP and REST, but it is expected that platform and
+service providers will define their own groundings to match the particular 
+platform technology used.
+</p>
+
+<h3>Expression Language Concepts</h3>
+<p>
+An important part of the metamodel is the <em>Expression Language</em>, a
+mathematical language of values, sets, lists, maps, functions and predicates,
+that is used by <code>Condition</code> and <code>Effect</code> nodes to 
+express calculation and computation.  The language has a similar expressive 
+power to the <em>Z Formal Notation</em>, but without quantifiers.  The type 
+<code>Expression</code> is the ancestor of <code>Function</code>, denoting a
+functional expression with operands, and <code>Parameter</code>, denoting a
+constant, variable, input or output.  
+</p>
+<p>
+Important kinds of <code>Function</code> include: <code>Arithmetic</code>, 
+modelling all kinds of arithmetic, <code>Projection</code>, modelling pairs
+and projections, <code>Manipulation</code>, modelling all set-theoretic 
+manipulations on sets, lists and maps, <code>Predicate</code>, the abstract 
+ancestor of <code>Comparison</code>, <code>Membership</code> and 
+<code>Proposition</code> predicates, and <code>Assignment</code>, the only 
+expression which causes a side-effect.  All other constructions in the 
+language have pure-functional semantics, in that they do not alter variable
+states.
+</p>
+<p>
+The varieties of <code>Parameter</code> include:  <code>Constant</code>, 
+denoting constants, <code>Variable</code>, denoting global variables,
+<code>Input</code>, <code>Output</code> and <code>Failure</code>, denoting
+respectively the inputs, outputs and exceptions passed as values to and
+from operations.  All parameters must be declared before usage in a model
+specification; and the model construction API seeks to resolve all uses of
+parameters, as the specification is built.  A <code>SemanticError</code>
+indicates that something is amiss in a model that might otherwise be parsed
+as syntactically correct.
+</p>
+
+</body>

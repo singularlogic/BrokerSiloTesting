@@ -1,0 +1,225 @@
+<html>
+<head>
+<title>
+Broker@Cloud VTTS 1.0
+</title>
+</head>
+<body>
+
+<p>This package contains four Java programs designed to be launched by CGI 
+scripts, in order to offer the validation, verification, test generation 
+and test grounding tools online, as web-services.
+It is part of the <strong>Broker@Cloud Verification and Testing
+Tool Suite, v1.0</strong>, &copy; Anthony J H Simons and Raluca Lefticaru, 
+2015. Main web site:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/</a>.
+</p>
+
+<h3>
+Package uk.ac.sheffield.vtts.web
+</h3>
+<p>
+This package contains four Java programs designed to be launched by CGI 
+scripts, in order to offer the validation, verification, test generation 
+and test grounding tools online, as web-services.  All these programs have
+been designed with JDK 1.6 compliance in mind (for the sake of older web
+servers) but have also been compiled and executed under JDK 1.7.  Examples
+of these programs in use may be found at the web site:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/</a>.  All of these
+programs work in the same way as the command-line versions, with the 
+exception of the test grounding program, which performs the equivalent 
+of test generation and grounding in a single step.
+</p>
+
+<h3>Dependencies</h3>
+<p>
+These tools use the <em>Java Abstract Syntax Trees</em> (JAST) package for 
+marshalling and unmarshalling, &copy; Anthony J H Simons, University of 
+Sheffield, available from:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/jast/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/jast/</a>.  You should install
+and unpack JAST 1.1 (available as the jar-file <code>JAST11.jar</code> in the
+same place that you compile and install this software.  This will be in some
+directory that is accessible from your web server's <code>cgi-bin</code> 
+directory (see below).
+</p>
+<p>
+You will need a web server configured to allow simple executable CGI scripts.
+You will need to write four short CGI scripts, in your preferred scripting
+language, to launch the Java Runtime Environment with one of the programs
+below as the main class to execute.  You will need a web browser to submit 
+web forms and view results as web pages.  You will also need to create 
+suitable HTML web pages designed to collect the inputs required by each 
+program and submit them via a web form, in the URL-encoded format.  Examples
+of such web-pages are available here:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/</a>.  Your web browser
+must be configured to display raw XML files using a default CSS stylesheet.
+</p>
+
+<h3>Configuration</h3>
+<p>
+To run these programs under CGI (Common Gateway Interface), you will need to 
+have a web server configured to allow you to run simple executable scripts 
+under a directory that is usually named <code>cgi-bin</code>.  Here, you will
+place small scripts which invoke the Java Runtime Environment (JRE) with one 
+of the programs below, on your machine.  
+While every installation may be slightly 
+different, in the following we assume that you have a <code>cgi-bin</code>
+directory, and under this, have created a sub-directory to store compiled
+Java classes, <code>cgi-bin/classes</code>.  We assume that your local 
+JRE is installed at the absolute path:  <code>/usr/local/bin/java</code>.
+</p>
+<p>The simplest way to install the software is to compile the source code
+from this software bundle, and install the compiled classes, along with the
+unpacked classes from the JAST 1.1 bundle, in their natural package directory
+structure, under <code>cgi-bin/classes</code>, which must be a <em>readable</em>
+directory (but need not be <em>executable</em>).  The CGI back-end only uses
+classes in the packages:
+</p>
+<ul>
+<li><code>
+uk.ac.sheffield.vtts.web
+</code></li>
+<li><code>
+uk.ac.sheffield.vtts.model
+</code></li>
+<li><code>
+uk.ac.sheffield.vtts.ground
+</code></li>
+<li><code>
+org.jast.ast
+</code></li>
+</ul>
+<p>
+and the other source distribution packages are not so relevant (the software does
+depend on standard Java packages).  Then, you will write simple
+executable scripts to launch each main program, and place these in the parent
+directory <code>cgi-bin</code>.  Illustrations are given below.
+</p>
+<p>
+In the following, we also assume you have designed a web page to launch each 
+program.  Each page will have a web-form which collects the expected 
+parameters for that program.  The web form should use the HTTP POST method to
+submit the form data, since each program expects to receive the web form data
+on standard input.  The output from the program will be returned as XML data,
+apart from grounding, which returns a Java source code text file.  You may 
+need to configure your web browser to display raw XML using a default CSS
+stylesheet (Apple Safari sometimes does not display raw XML).
+</p>
+
+<h3>Usage</h3>
+<p>
+Since Java class files are not directly executable as CGI programs, you
+will need to write short executable scripts (in C shell, Bourne shell,
+etc.) that launch your Java runtime environment with the chosen program.
+The following example scripts are merely illustrative and do not necessarily
+reflect the actual pathnames on your machine.  The examples each describe the
+web form parameter names used to pass data.
+</p>
+
+<ul>
+<li><strong>Validation</strong>: validates a specification looking
+for missing transitions in the state machine.  Checks all handled 
+and ignored events, so that the designer may be confident of handling
+the desired events in each state.
+The web-form should have a text-field named <code>url</code> to 
+accept the public URL of your specification file.  The submitted form
+data should look something like this:
+<p>
+<code>url=<em>xml_spec_url</em></code>
+</p>
+<p>
+Where the <em>xml_spec_url</em> is the complete URL pathname leading
+to your XML specification file. 
+The script to launch this program will contain a line like this:
+</p>
+<p><code>
+/usr/local/bin/java classes/uk.ac.sheffield.vtts.web.WebValidateMachine
+</code></p>
+</li>
+
+<li><strong>Verification</strong>: verifies a specification for
+logical consistency and completeness.  Checks that all the guarded
+paths through each operation are mutually exclusive and exhaustive, 
+such that there is no blocking or nondeterminism.
+The web-form should have a text-field named <code>url</code> to 
+accept the public URL of your specification file.  The submitted form
+data should look something like this:
+<p>
+<code>url=<em>xml_spec_url</em></code>
+</p>
+<p>
+Where the <em>xml_spec_url</em> is the complete URL pathname leading
+to your XML specification file. 
+The script to launch this program will contain a line like this:
+</p>
+<p><code>
+/usr/local/bin/java classes/uk.ac.sheffield.vtts.web.WebVerifyProtocol
+</code>
+</p></li>
+
+<li><strong>Test Generation</strong>: generates a high-level test suite 
+from a specification.  Simulates the whole specification model
+(machine and protocol), generating test sequences up to a given maximum
+length, and optionally compressing the results.
+The web-form should have a text-field named <code>url</code> to 
+accept the public URL of your specification file, an integer spinner
+field named <code>depth</code> to set the desired test depth, and a 
+boolean radio button named <code>multi</code> to select multi-objective
+test generation.  The submitted form data should look something like this:
+<p>
+<code>url=<em>xml_spec_url</em>&amp;depth=<em>2</em>&amp;multi=<em>false</em></code>
+</p>
+<p>
+Where the <em>xml_spec_url</em> is the complete URL pathname leading
+to your XML specification file, <em>2</em> is a chosen test depth, and 
+<em>false</em> indicates single-objective testing.
+The script to launch this program will contain a line like this:
+</p>
+<p><code>
+/usr/local/bin/java classes/uk.ac.sheffield.vtts.web.WebGenerateTests
+</code>
+</p></li>
+
+<li><strong>Test Grounding</strong>: generates a concrete JUnit test driver,
+based on the assumption that the service-under-test is either:  a plain old
+Java object; a JAX-WS SOAP web service; or a JAX-RS REST web service.  These
+are examples on which to base your own grounding.
+The web-form should have a text-field named <code>url</code> to 
+accept the public URL of your specification file, an integer spinner
+field named <code>depth</code> to set the desired test depth, a boolean radio
+button named <code>multi</code> to select multi-objective test generation,
+a text spinner labelled <code>ground</code> to pick one of the three 
+grounding formats: <code>"Java" | "JAX-WS" | "JAX-RS"</code> and a boolean
+radio button named <code>meta</code> to select full meta-testing of all
+labelled states and transitions.
+<p>
+Further optional fields include a text field labelled <code>driver</code> 
+to accept the target package name for the generated JUnit test driver, a text 
+field labelled <code>system</code> to accept the source package name for the
+tested Java service client (for non-REST), a text field labelled 
+<code>endpoint</code> to accept the URI of the service (for REST only)
+The submitted form data should look something like this:
+</p>
+<p>
+<code>url=<em>xml_spec_url</em>&amp;depth=<em>2</em>&amp;multi=<em>false</em>&amp;ground=<em>JAX-RS</em>&amp;meta=<em>true</em>&amp;driver=<em>my.test.driver</em>&amp;endpoint=<em>my_rest_url</em></code>
+</p>
+<p>
+Where the <em>xml_spec_url</em> is the complete URL pathname leading
+to your XML specification file, <em>2</em> is a chosen test depth, 
+<em>false</em> indicates single-objective testing, <em>JAX-RS</em>
+indicates generating code for testing a REST service, <em>true</em> is
+chosen to request full meta-testing and the other parameters are a package
+name and the URL of the tested REST service.
+The script to launch this program will contain a line like this:
+<p><code>
+/usr/local/bin/java classes/uk.ac.sheffield.vtts.web.WebGroundTests
+</code>
+</p></li>
+
+</ul>
+
+</body>

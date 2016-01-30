@@ -1,0 +1,73 @@
+<html>
+<head>
+<title>
+Broker@Cloud VTTS 1.0
+</title>
+</head>
+<body>
+
+<p>This package contains Broker@Cloud components that implement grounding, 
+or the translation of platform-neutral test suites to technology-specific
+test suites that may be executed.
+It is part of the <strong>Broker@Cloud Verification and Testing Tool Suite, 
+v1.0</strong>, &copy; Anthony J H Simons and Raluca Lefticaru, 2015. 
+Main web site:
+<a href="http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/">
+http://staffwww.dcs.shef.ac.uk/people/A.Simons/broker/</a>.
+</p>
+
+<h3>
+Package uk.ac.sheffield.vtts.ground
+</h3>
+<p>This package contains Broker@Cloud components that are involved in test
+grounding, or the process of generating concrete tests, targeting a specific
+service implementation technology, from a high-level test suite.  Each
+concrete grounding is based on a visitor-pattern for code generation; and
+the three examples that we give (for simple POJOs, JAX-WS clients and JAX-RS
+clients) are to encourage you to develop your own kinds of grounding for your
+own service implementation technology.  Follow the coding style shown here
+for easily-maintained results.
+</p>
+
+<h3>
+Grounding Generators
+</h3>
+<p>
+The interface <code>Grounding</code> is the ancestor of all code generators.
+The type <code>AbstractGrounding</code> implements much of the code-generating
+algorithm, but leaves details to specific subclasses <code>JavaGrounding</code>,
+<code>JaxWsGrounding</code> and <code>JaxRsGrounding</code>, which generate
+different kinds of JUnit test-driver class targeting specific service
+implementation technologies.  All Grounding generators make use of the type
+<code>JavaDependency</code>, which discovers package dependencies.
+</p>
+
+<h3>
+Object Factories
+</h3>
+<p>
+Both during model simulation and during testing, it is necessary to create 
+objects of both simple and complex types, which are passed as parameters.
+Whereas simple values have printable representations that may be re-read by
+Java, this is not the case for complex types (such as List, Set, Map, Pair).
+The interface <code>Factory</code> is the ancestor of all factory objects for
+synthesising Java instances of complex types.  The type 
+<code>AbstractFactory</code> implements much of the object-synthesising
+algorithm, but leaves details to specific subclasses 
+<code>ModelFactory</code> and <code>JavaFactory</code>.
+</p>
+
+<h3>Complex Arguments</h3>
+<p>
+Most arguments passed to and from services are of simple types, such as 
+<code>String</code> or <code>int</code>, which can be easily converted to and
+from Strings.  The expression modelling language also allows values of 
+generic <code>List</code>, <code>Set</code>, <code>Map</code> and 
+<code>Pair</code> types to be used as inputs and outputs.  The default Java 
+implementations chosen for these are, respectively, <code>ArrayList</code>, 
+<code>HashSet</code>, <code>HashMap</code> and <code>SimpleEntry</code>.
+We also provide a free-standing public version of <code>SimpleEntry</code>
+to overcome objections by some service clients to nested classes.
+</p>
+
+</body>
